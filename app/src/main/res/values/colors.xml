@@ -5,5 +5,13 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#ffffff</color>
     <color name="rightNav">#032e63</color>
+    <color name="color_blue">#1E88E5</color>
+    <color name="color_white">#ffffff</color>
+    <color name="color_purple">#9C27B0</color>
+    <color name="color_green">#388E3C</color>
+    <color name="color_soormeyi">#26264d</color>
+    <color name="color_text">#F22E2E2E</color>
+    <color name="color_pink_text">#ff688b</color>
+    <color name="color_text_disable">#bdbdca</color>
 
 </resources>

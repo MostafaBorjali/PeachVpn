@@ -8,7 +8,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        applicationId 'com.lazycoder.cakevpn'
+        applicationId 'com.peachsoft.vpn'
     }
     buildTypes {
         release {
@@ -39,7 +39,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.google.android.material:material:1.2.0'
-
+    implementation 'me.itangqi.waveloadingview:library:0.3.5'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'com.timqi.sectorprogressview:library:2.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.7.0'
 
     // Glide image loader

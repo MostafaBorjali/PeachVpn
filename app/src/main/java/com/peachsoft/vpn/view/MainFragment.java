@@ -11,20 +11,20 @@ import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
-import com.peachsoft.vpn.CheckInternetConnection;
 import com.peachsoft.cakevpn.R;
-import com.peachsoft.vpn.SharedPreference;
 import com.peachsoft.cakevpn.databinding.FragmentMainBinding;
+import com.peachsoft.vpn.CheckInternetConnection;
+import com.peachsoft.vpn.SharedPreference;
 import com.peachsoft.vpn.interfaces.ChangeServer;
 import com.peachsoft.vpn.model.Server;
 
@@ -49,7 +49,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     private OpenVPNService vpnService = new OpenVPNService();
     boolean vpnStart = false;
     private SharedPreference preference;
-
     private FragmentMainBinding binding;
 
     @Override
@@ -57,10 +56,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
-
         View view = binding.getRoot();
         initializeAll();
-
         return view;
     }
 
@@ -83,6 +80,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
         super.onViewCreated(view, savedInstanceState);
 
         binding.vpnBtn.setOnClickListener(this);
+        binding.imageBgConnected.setOnClickListener(this);
 
         // Checking is vpn already running or not
         isServiceRunning();
@@ -95,20 +93,22 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.image_bg_connected:
             case R.id.vpnBtn:
                 // Vpn is running, user would like to disconnect current connection.
                 if (vpnStart) {
                     confirmDisconnect();
-                }else {
+                } else {
                     prepareVpn();
                 }
+                break;
         }
     }
 
     /**
      * Show show disconnect confirm dialog
      */
-    public void confirmDisconnect(){
+    public void confirmDisconnect() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getActivity().getString(R.string.connection_close_confirm));
 
@@ -160,6 +160,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Stop vpn
+     *
      * @return boolean: VPN status
      */
     public boolean stopVpn() {
@@ -238,67 +239,79 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Status change with corresponding vpn connection status
+     *
      * @param connectionState
      */
     public void setStatus(String connectionState) {
-        if (connectionState!= null)
-        switch (connectionState) {
-            case "DISCONNECTED":
-                status("connect");
-                vpnStart = false;
-                vpnService.setDefaultStatus();
-                binding.logTv.setText("");
-                break;
-            case "CONNECTED":
-                vpnStart = true;// it will use after restart this activity
-                status("connected");
-                binding.logTv.setText("");
-                break;
-            case "WAIT":
-                binding.logTv.setText("waiting for server connection!!");
-                break;
-            case "AUTH":
-                binding.logTv.setText("server authenticating!!");
-                break;
-            case "RECONNECTING":
-                status("connecting");
-                binding.logTv.setText("Reconnecting...");
-                break;
-            case "NONETWORK":
-                binding.logTv.setText("No network connection");
-                break;
-        }
+        if (connectionState != null)
+            switch (connectionState) {
+                case "DISCONNECTED":
+                    status("connect");
+                    vpnStart = false;
+                    vpnService.setDefaultStatus();
+                    binding.logTv.setText("disconnected");
+                    break;
+                case "CONNECTED":
+                    vpnStart = true;// it will use after restart this activity
+                    status("connected");
+                    binding.logTv.setText("connected");
+                    break;
+                case "WAIT":
+                    binding.logTv.setText("waiting for server connection!!");
+                    break;
+                case "AUTH":
+                    binding.logTv.setText("server authenticating!!");
+                    break;
+                case "RECONNECTING":
+                    status("connecting");
+                    binding.logTv.setText("Reconnecting...");
+                    break;
+                case "NONETWORK":
+                    binding.logTv.setText("No network connection");
+                    break;
+            }
 
     }
 
     /**
      * Change button background color and text
+     *
      * @param status: VPN current status
      */
     public void status(String status) {
 
         if (status.equals("connect")) {
+            binding.logTv.setTextColor(ContextCompat.getColor(getContext(), R.color.color_text_disable));
+            binding.progressbar.setVisibility(View.GONE);
+            binding.icPower.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_on_soormeyi));
+            binding.imageBgConnected.setVisibility(View.VISIBLE);
+            binding.imageBgConnected.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_power_bg_dissconnect));
+            binding.connectionStatus.setVisibility(View.GONE);
 
-            binding.vpnBtn.setText(getString(R.string.connect));
         } else if (status.equals("connecting")) {
+            binding.progressbar.setVisibility(View.VISIBLE);
+            binding.icPower.setVisibility(View.GONE);
+            binding.imageBgConnected.setVisibility(View.GONE);
             binding.vpnBtn.setText(getString(R.string.connecting));
+            binding.logTv.setTextColor(ContextCompat.getColor(getContext(), R.color.color_pink_text));
         } else if (status.equals("connected")) {
-
+            binding.connectionStatus.setVisibility(View.VISIBLE);
+            binding.icPower.setVisibility(View.VISIBLE);
+            binding.imageBgConnected.setVisibility(View.VISIBLE);
+            binding.progressbar.setVisibility(View.GONE);
+            binding.icPower.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_on));
+            binding.imageBgConnected.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_power_bg_connect));
             binding.vpnBtn.setText(getString(R.string.disconnect));
+            binding.logTv.setTextColor(ContextCompat.getColor(getContext(), R.color.color_pink_text));
 
         } else if (status.equals("tryDifferentServer")) {
-
-            binding.vpnBtn.setBackgroundResource(R.drawable.button_connected);
-            binding.vpnBtn.setText("Try Different\nServer");
+            binding.logTv.setText("Try Different\nServer");
         } else if (status.equals("loading")) {
-            binding.vpnBtn.setBackgroundResource(R.drawable.button);
-            binding.vpnBtn.setText("Loading Server..");
+            binding.logTv.setText("Loading Server..");
         } else if (status.equals("invalidDevice")) {
-            binding.vpnBtn.setBackgroundResource(R.drawable.button_connected);
-            binding.vpnBtn.setText("Invalid Device");
+            binding.logTv.setText("Invalid Device");
         } else if (status.equals("authenticationCheck")) {
-            binding.vpnBtn.setBackgroundResource(R.drawable.button_connecting);
-            binding.vpnBtn.setText("Authentication \n Checking...");
+            binding.logTv.setText("Authentication \n Checking...");
         }
 
     }
@@ -336,10 +349,11 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Update status UI
-     * @param duration: running time
+     *
+     * @param duration:          running time
      * @param lastPacketReceive: last packet receive time
-     * @param byteIn: incoming data
-     * @param byteOut: outgoing data
+     * @param byteIn:            incoming data
+     * @param byteOut:           outgoing data
      */
     public void updateConnectionStatus(String duration, String lastPacketReceive, String byteIn, String byteOut) {
         binding.durationTv.setText("Duration: " + duration);
@@ -350,6 +364,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Show toast message
+     *
      * @param message: toast message
      */
     public void showToast(String message) {
@@ -358,6 +373,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * VPN server country icon change
+     *
      * @param serverIcon: icon URL
      */
     public void updateCurrentServerIcon(String serverIcon) {
@@ -368,6 +384,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Chan
 
     /**
      * Change server when user select new server
+     *
      * @param server ovpn server details
      */
     @Override
