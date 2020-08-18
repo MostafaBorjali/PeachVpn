@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "856285610767",
+    "firebase_url": "https://peach-vpn.firebaseio.com",
+    "project_id": "peach-vpn",
+    "storage_bucket": "peach-vpn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856285610767:android:416f766f2afc742636f47a",
+        "android_client_info": {
+          "package_name": "com.peachsoft.vpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "856285610767-cml19gh0ev6d0g3v6dipoaa7h54uep89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBZffHl0qkI0eZbqk5jH1eDzvAVcb5Hu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "856285610767-cml19gh0ev6d0g3v6dipoaa7h54uep89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-7388469328569832~9158854580"
+    }
+  ],
+  "configuration_version": "1"
+}

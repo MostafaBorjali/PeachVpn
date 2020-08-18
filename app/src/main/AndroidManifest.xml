@@ -37,7 +37,9 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
-
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7388469328569832~9158854580" />
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
